@@ -27,6 +27,7 @@ import six
 import tinysegmenter
 from .segmenter import Segmenter
 from .chunk import Chunk, ChunkList
+import re
 
 _PARTICLES = {u'か', u'かしら', u'から', u'が', u'くらい', u'けれども', u'こそ',
     u'さ', u'さえ', u'しか', u'だけ', u'だに', u'だの', u'て', u'で', u'でも',
@@ -89,10 +90,14 @@ class TinysegmenterSegmenter(Segmenter):
     for word in results:
       word = word.strip()
       if not word:
-        continue
-      if source[seek: seek + len(word)] != word:
+        continue 
+
+      # Handle non-breaking spaces
+      preprocessed_word = re.sub(r"[\u00a0\u2000-\u2009\u202F\u205F]", ' ', word)
+
+      if source[seek: seek + len(preprocessed_word)] != preprocessed_word:
         assert source[seek] == ' '
-        assert source[seek + 1: seek + len(word) + 1] == word
+        assert source[seek + 1: seek + len(preprocessed_word) + 1] == preprocessed_word
         chunks.append(Chunk.space())
         seek += 1
 
