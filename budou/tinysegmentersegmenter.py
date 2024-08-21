@@ -93,7 +93,7 @@ class TinysegmenterSegmenter(Segmenter):
         continue 
 
       # Handle non-breaking spaces
-      preprocessed_word = re.sub(r"[\u00a0\u2000-\u2009\u202F\u205F]", ' ', word)
+      preprocessed_word = re.sub(r"[\u00a0\u2000-\u2009\u202F\u205F\u2012]", ' ', word)
 
       if source[seek: seek + len(preprocessed_word)] != preprocessed_word:
         assert source[seek] == ' '
